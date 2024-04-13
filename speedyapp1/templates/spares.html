@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block start %}
+<div class="container p-5 shadow-lg">
+    <h1 class="spare-title" style="text-align: center;">Spare Parts</h1>
+    <div class="row">
+        {% for spare in query_set %}
+        <div class="card m-3 p-4" style="width: 18rem;">
+            <img src="{{ spare.spare_image.url }}" class="card-img-top" alt="{{ spare.spare_name }}">
+            <div class="card-body">
+                <h5 style="color: red;">RS. {{ spare.spare_price }}</h5>
+                <h5 class="card-title">{{ spare.spare_name }}</h5>                                          
+                {% if spare.in_stock %}
+                    <p class="text-success">In Stock</p>
+                {% else %}
+                    <p class="text-danger">Out of Stock</p>
+                {% endif %}
+                <a href="{% url 'add_to_cart' spare.uid %}" class="btn btn-info mx-auto d-block">Add to Cart</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
