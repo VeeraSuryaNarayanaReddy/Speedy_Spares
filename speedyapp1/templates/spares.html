@@ -1,25 +1,26 @@
 {% extends 'base.html' %}
+
 {% block start %}
-<div class="container p-5 shadow-lg">
-    <h1 class="spare-title" style="text-align: center;">Spare Parts</h1>
-    <div class="row">
+<div class="container p-5 mt-4 shadow-lg"> <!-- Added margin-top (mt-4) for spacing between navbar and content -->
+    <h1 class="spare-title text-center mb-5">Spare Parts</h1> <!-- Centered title with margin-bottom -->
+    <div class="row justify-content-center"> <!-- Center content and responsive row -->
         {% for spare in query_set %}
-        <div class="card m-3 p-4" style="width: 18rem;">
-            <img src="{{ spare.spare_image.url }}" class="card-img-top" alt="{{ spare.spare_name }}">
-            <div class="card-body">
-                <h5 style="color: red;">RS. {{ spare.spare_price }}</h5>
-                <h5 class="card-title">{{ spare.spare_name }}</h5>                                          
-                {% if spare.in_stock %}
-                    <p class="text-success">In Stock</p>
-                {% else %}
-                    <p class="text-danger">Out of Stock</p>
-                {% endif %}
-                <a href="{% url 'add_to_cart' spare.uid %}" class="btn btn-info mx-auto d-block">Add to Cart</a>
+        <div class="col-md-4 col-sm-6 col-lg-3 mb-4 d-flex align-items-stretch"> <!-- Adjusted column sizes for responsiveness -->
+            <div class="card shadow-lg h-100"> <!-- Add shadow to cards and ensure height consistency -->
+                <img src="{{ spare.spare_image.url }}" class="card-img-top" alt="{{ spare.spare_name }}" style="object-fit: contain; height: 200px;"> <!-- Ensuring image is fully visible -->
+                <div class="card-body d-flex flex-column">
+                    <h5 style="color: red;">RS. {{ spare.spare_price }}</h5>
+                    <h5 class="card-title">{{ spare.spare_name }}</h5>
+                    {% if spare.in_stock %}
+                        <p class="text-success">In Stock</p>
+                    {% else %}
+                        <p class="text-danger">Out of Stock</p>
+                    {% endif %}
+                    <a href="{% url 'add_to_cart' spare.uid %}" class="btn btn-info mt-auto">Add to Cart</a> <!-- Button aligned to the bottom -->
+                </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
-
-
 {% endblock %}

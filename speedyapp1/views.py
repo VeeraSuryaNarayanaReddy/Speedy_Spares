@@ -13,24 +13,33 @@ from django.conf import settings
 
 api = Instamojo(api_key=settings.INSTAMOJO_API_KEY,
                     auth_token=settings.INSTAMOJO_AUTH_TOKEN,endpoint='https://test.instamojo.com/api/1.1/')
-def porcess_payment(request):
-    cart = Cart.objects.get(is_paid=False,user=request.user)
-    print(cart.get_cart_total) 
+def process_payment(request):
+    cart = Cart.objects.get(is_paid=False, user=request.user)
+    total_amount = cart.get_cart_total()
+    print(total_amount)
+
     response = api.payment_request_create(
-        amount=cart.get_cart_total,
+        amount=total_amount,
         purpose="Orders",
         email="rnarayana183@gmail.com",
         send_email=True,
         buyer_name=request.user.first_name,
         redirect_url="http://127.0.0.1:8000/"
     )
-    print(response)
-    return redirect('home')
+
+    # Redirect the user to the payment URL
+    if response['success']:
+        payment_url = response['payment_request']['longurl']
+        return redirect(payment_url)  # Redirecting to Instamojo payment URL
+    else:
+        # Handle the case when payment request creation fails
+        return redirect('error_page')  # Redirect to an error page or show a message
+
+
 def logout_view(request):
     logout(request)
     # Redirect to a success page after logout
-    return redirect('home.html')  # Replace 'home' with your desired URL name
-
+    return redirect('home')  # Replace 'home' with your desired URL name
 
 def brandview(request):
     query_set = Brand.objects.all()
@@ -41,13 +50,15 @@ def sparesview(request,model):
     query_set = Spares.objects.filter(model__model_name=model)
     return render(request,'spares.html',{'query_set':query_set})
 
+
 def model_view(request,brand):
     query_set = Brand_models.objects.filter(brand__brand_name=brand)
     return render(request,'models.html',{'query_set': query_set})
 
 
 def homeview(request):
-    return render(request, 'home.html')
+    query_set = Brand.objects.all()
+    return render(request, 'home.html',{'query_set' : query_set})
 
 
 @login_required
@@ -89,3 +100,27 @@ def orders(request):
     orders_obj=Cart.objects.filter(user=request.user,is_paid=True)
     context={'orders_obj':orders_obj}
     return render(request,'orders.html',context)
+
+
+from django.db.models import Q  # Import this for complex queries
+
+def search_results(request):
+    query = request.GET.get('query')
+    
+    if query:
+        brand_results = Brand.objects.filter(Q(brand_name__icontains=query))
+        spare_results = Spares.objects.filter(Q(spare_name__icontains=query))
+
+        context = {
+            'query': query,
+            'brand_results': brand_results,
+            'spare_results': spare_results
+        }
+    else:
+        context = {
+            'query': None,
+            'brand_results': None,
+            'spare_results': None
+        }
+
+    return render(request, 'search_results.html', context)

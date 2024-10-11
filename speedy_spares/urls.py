@@ -21,7 +21,7 @@ from accounts import views as accountviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('payment/',views.porcess_payment,name='payment'),
+    path('payment/',views.process_payment,name='payment'),
     path('cart/',views.cart,name='cart'),
     path('remove_item_from_cart/<uuid:item_uid>',views.remove_item_from_cart,name='remove_item_from_cart'),
     path('add_to_cart/<product_id>',views.add_cart,name='add_to_cart'),
@@ -33,4 +33,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('signup/', accountviews.signup_view, name='signup'),
     path('models/<brand>',views.model_view),
+    path('search/', views.search_results, name='search_results'),
 ]

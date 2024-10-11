@@ -55,6 +55,6 @@ def activate_email(request,email_token):
         user=profile.objects.get(email_token=email_token)
         user.is_email_verified=True
         user.save()
-        return render(request,'home.html')
+        return render(request,'')
     except Exception as e:
         return HttpResponse('Invalid Email Token')

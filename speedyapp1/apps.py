@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-import imp
+import importlib
 
 class Speedyapp1Config(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'

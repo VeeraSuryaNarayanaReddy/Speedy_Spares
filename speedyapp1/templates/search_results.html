@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block start %}
+<div class="container p-5 shadow-lg">
+    <h1 class="search-title" style="text-align: center;">Search Results for "{{ query }}"</h1>
+
+    <h3>Brands</h3>
+    <div class="row">
+        {% for brand in brand_results %}
+            <div class="card m-3" style="width: 18rem;">
+                <img src="{{ brand.brand_image.url }}" class="card-img-top" alt="{{ brand.brand_name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ brand.brand_name }}</h5>
+                    <a href="/models/{{ brand.brand_name }}" class="btn btn-primary mx-auto d-block">Explore</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No results found for brands.</p>
+        {% endfor %}
+    </div>
+
+    <h3>Spares</h3>
+    <div class="row">
+        {% for spare in spare_results %}
+            <div class="card m-3" style="width: 18rem;">
+                <img src="{{ spare.spare_image.url }}" class="card-img-top" alt="{{ spare.spare_name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ spare.spare_name }}</h5>
+                    <a href="/spares/{{ spare.spare_name }}" class="btn btn-primary mx-auto d-block">Explore</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No results found for spare parts.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
